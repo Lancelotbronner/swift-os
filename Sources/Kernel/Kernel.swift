@@ -30,7 +30,13 @@ struct Kernel {
         #if arch(arm64)
             registerVectorTable()
         #endif
-        enableIRQ()
+
+        // Initialise the GIC-400 interrupt controller before enabling
+        // any device interrupts.
+        initGIC()
+        // Enable the UART0 SPI in the GIC Distributor so receive
+        // interrupts can reach the CPU.
+        gicEnableIRQ(gicUART0SPI)
 
         print("Hello Swift!")
 
