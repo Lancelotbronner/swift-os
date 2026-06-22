@@ -7,13 +7,14 @@ let swiftSettings: [SwiftSetting] = [
     .enableExperimentalFeature("Extern"),
     .enableUpcomingFeature("InternalImportsByDefault"),
     .enableUpcomingFeature("MemberImportVisibility"),
-    .unsafeFlags(["-strict-memory-safety"]),
+	.strictMemorySafety(),
     .treatAllWarnings(as: .error),
 ]
 
 let cSettings: [CSetting] = [
     .enableWarning("all"),
     .enableWarning("extra"),
+	.disableWarning("unused-command-line-argument"),
     .treatAllWarnings(as: .error),
 ]
 
