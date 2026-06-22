@@ -1,45 +1,5 @@
 private import AsmSupport
 
-#if RASPI
-    private import RaspberryPi
-#endif
-
-// MARK: - IRQ Dispatcher
-
-/// Central IRQ handler called from the EL1/SPx IRQ vector.
-///
-/// Reads the GIC Interrupt Acknowledge Register to determine which device
-/// fired, dispatches to the appropriate driver handler, then signals
-/// End-Of-Interrupt back to the GIC.
-@inline(__always)
-private func dispatchIRQ() {
-    #if RASPI
-        // Acknowledge: read IAR, which also signals the GIC that we are
-        // servicing the interrupt. The returned ID encodes the SPI/PPI number.
-        let irqID = gicAcknowledge()
-
-        if irqID == gicSpuriousID {
-            // Spurious interrupt – nothing to do.
-            return
-        }
-
-        switch irqID {
-        case gicUART0SPI:
-            // UART0 (PL011) Receive interrupt
-            handleUART0RX()
-        case _:
-            // Unknown / unhandled interrupt – log and move on.
-            print("IRQ: unhandled GIC ID ", terminator: "")
-            print(irqID)
-        }
-
-        // Signal End-Of-Interrupt so the GIC deactivates the interrupt line.
-        gicEndOfInterrupt(irqID)
-    #else
-        print("IRQ: no GIC driver for this platform")
-    #endif
-}
-
 // MARK: - EL1 SP_EL0 handlers
 
 @c
@@ -98,6 +58,36 @@ package func handleCurrentELSPxSync(esr: UInt64, elr: UnsafeMutablePointer<UInt6
 @export(interface)
 package func handleCurrentELSPxIRQ() {
     dispatchIRQ()
+}
+
+/// Central IRQ handler called from the EL1/SPx IRQ vector.
+///
+/// Reads the GIC Interrupt Acknowledge Register to determine which device
+/// fired, dispatches to the appropriate driver handler, then signals
+/// End-Of-Interrupt back to the GIC.
+@inline(__always)
+func dispatchIRQ() {
+	// Acknowledge: read IAR, which also signals the GIC that we are
+	// servicing the interrupt. The returned ID encodes the SPI/PPI number.
+	let irqID = gicAcknowledge()
+
+	if irqID == gicSpuriousID {
+		// Spurious interrupt – nothing to do.
+		return
+	}
+
+	switch irqID {
+	case gicUART0SPI:
+		// UART0 (PL011) Receive interrupt
+		handleUART0RX()
+	case _:
+		// Unknown / unhandled interrupt – log and move on.
+		print("IRQ: unhandled GIC ID ", terminator: "")
+		print(irqID)
+	}
+
+	// Signal End-Of-Interrupt so the GIC deactivates the interrupt line.
+	gicEndOfInterrupt(irqID)
 }
 
 @c

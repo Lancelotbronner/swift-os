@@ -5,6 +5,8 @@ import PackageDescription
 let swiftSettings: [SwiftSetting] = [
     .enableExperimentalFeature("Lifetimes"),
     .enableExperimentalFeature("Extern"),
+	.enableExperimentalFeature("Embedded"),
+	.enableExperimentalFeature("SafeInteropWrappers"),
     .enableUpcomingFeature("InternalImportsByDefault"),
     .enableUpcomingFeature("MemberImportVisibility"),
 	.strictMemorySafety(),
@@ -24,6 +26,7 @@ let package = Package(
         .executable(name: "Kernel", targets: ["Kernel"]),
         .library(name: "KernLibc", targets: ["KernLibc"]),
         .library(name: "AppLibc", targets: ["AppLibc"]),
+		.library(name: "AsmSupport", targets: ["AsmSupport"]),
     ],
     traits: [
         .default(enabledTraits: ["RASPI4"]),
@@ -37,7 +40,6 @@ let package = Package(
         .executableTarget(
             name: "Kernel",
             dependencies: [
-                .target(name: "Boot"),
                 .target(name: "KernelCore"),
                 .target(name: "KernLibc"),
                 .target(name: "AsmSupport"),
@@ -58,7 +60,6 @@ let package = Package(
             name: "ArchAArch64",
             dependencies: [
                 .target(name: "AsmSupport"),
-                .target(name: "RaspberryPi", condition: .when(traits: ["RASPI"])),
             ],
             swiftSettings: swiftSettings,
         ),
@@ -75,14 +76,17 @@ let package = Package(
                 .target(name: "Hardware"),
                 .target(name: "AsmSupport"),
                 .target(name: "LinkerSupport"),
+				.target(name: "ArchAArch64"),
             ],
             swiftSettings: swiftSettings + [
                 .enableExperimentalFeature("Volatile")
             ],
         ),
         .target(name: "LinkerSupport", swiftSettings: swiftSettings),
-        .target(name: "Boot", cSettings: cSettings),
         .target(name: "AsmSupport", cSettings: cSettings),
         .target(name: "AppLibc", swiftSettings: swiftSettings),
     ],
+	swiftLanguageModes: [.v6],
+	cLanguageStandard: .c2x,
+	cxxLanguageStandard: .cxx2b
 )

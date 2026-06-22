@@ -1,5 +1,4 @@
-#ifdef __aarch64__
-
+#if false
 .section ".text.boot"
 
 .global _start

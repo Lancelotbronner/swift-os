@@ -28,7 +28,7 @@ struct Kernel {
         #endif
 
         #if arch(arm64)
-            registerVectorTable()
+            register_vector_table()
         #endif
 
         // Initialise the GIC-400 interrupt controller before enabling
@@ -59,7 +59,7 @@ struct Kernel {
             // For debugging
             brk0()
 
-            let el = getEL()
+		let el = get_el().EL
             let elLabel: StaticString = "Exception Level:"
             print(elLabel, terminator: " ")
             print(el)
