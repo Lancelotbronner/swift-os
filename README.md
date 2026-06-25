@@ -36,7 +36,10 @@ An operating system written in Swift.
 ```shell
 swift build -c release --triple aarch64-none-none-elf --toolset toolset.json --build-system native
 ```
-
+and the debug version
+```bash
+swift build -c debug --triple aarch64-none-none-elf --toolset toolset-debug.json --build-system native
+```
 ## Running on QEMU
 
 ```shell

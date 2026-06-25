@@ -1,36 +1,36 @@
 {
-    "schemaVersion": "1.0",
-    "swiftCompiler": {
-        "extraCLIOptions": [
-            "-Osize",
-            "-enable-experimental-feature", "Embedded",
-            "-Xfrontend", "-no-allocations",
-            "-Xfrontend", "-function-sections",
-            "-Xfrontend", "-disable-stack-protector",
-            "-Xlinker-driver", "-nostdlib",
-            "-Xlinker-driver", "-fuse-ld=lld"
-        ]
-    },
-    "linker": {
-        "extraCLIOptions": [
-            "-nostdlib",
-            "-static",
-            "--gc-sections",
-            "--strip-all",
-            "--orphan-handling=error",
-            "-T", "linker.ld",
-            "-Map", ".build/kernel.map"
-        ]
-    },
-    "debugger": {
-        "path": "/usr/bin/env",
-        "extraCLIOptions": [
-            "qemu-system-aarch64",
-            "-machine", "raspi4b",
-            "-serial", "stdio",
-            "-device", "usb-mouse",
-            "-device", "usb-kbd",
-            "-kernel"
-        ]
-    }
+	"schemaVersion": "1.0",
+	"swiftCompiler": {
+		"extraCLIOptions": [
+			"-Osize",
+			"-enable-experimental-feature", "Embedded",
+			"-Xfrontend", "-no-allocations",
+			"-Xfrontend", "-function-sections",
+			"-Xfrontend", "-disable-stack-protector",
+			"-Xlinker-driver", "-nostdlib",
+			"-Xlinker-driver", "-fuse-ld=lld"
+		]
+	},
+	"linker": {
+		"extraCLIOptions": [
+			"-nostdlib",
+			"-static",
+			"--gc-sections",
+			"--strip-all",
+			"--orphan-handling=error",
+			"-T", "linker.ld",
+			"-Map", ".build/kernel.map"
+		]
+	},
+	"debugger": {
+		"path": "/usr/bin/env",
+		"extraCLIOptions": [
+			"qemu-system-aarch64",
+			"-machine", "raspi4b",
+			"-serial", "stdio",
+			"-device", "usb-mouse",
+			"-device", "usb-kbd",
+			"-kernel"
+		]
+	}
 }

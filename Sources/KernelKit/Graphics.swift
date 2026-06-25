@@ -1,0 +1,53 @@
+
+public struct Graphics<Target: RenderTarget & ~Copyable>: ~Copyable {
+	public var target: Target
+
+	@inline(always)
+	public init(target: consuming Target) {
+		self.target = target
+	}
+}
+
+public extension Graphics where Target: ~Copyable {
+	mutating func drawPoint(x: Int, y: Int, color: Target.Depth) {
+		// TODO: check bounds
+		unsafe self.target[uncheckedX: x, y: y] = color
+	}
+
+	mutating func fillRect(x0: Int, y0: Int, x1: Int, y1: Int, color: Target.Depth) {
+		// TODO: check bounds
+		for y in y0...y1 {
+			for x in x0...x1 {
+				unsafe self.target[uncheckedX: x, y: y] = color
+			}
+		}
+	}
+
+	mutating func drawChar(_ c: UInt8, x: Int, y: Int, color: Target.Depth) {
+		// TODO: check bounds
+		guard c < font.count else { return }
+		let glyph = font[Int(c)]
+		for i in 0..<fontHeight {
+			for j in 0..<fontWidth where glyph[i] & 1 << j != 0 {
+				unsafe self.target[uncheckedX: x &+ j, y: y &+ i] = color
+			}
+		}
+	}
+
+	mutating func drawString(_ s: StaticString, x: Int, y: Int, color: Target.Depth) {
+		let span = unsafe Span(_unsafeStart: s.utf8Start, count: s.utf8CodeUnitCount)
+		var x = x
+		var y = y
+		for i in span.indices {
+			switch span[i] {
+			case 0x0d: x = 0
+			case 0x0a:
+				x = 0
+				y &+= fontHeight
+			case let c:
+				self.drawChar(c, x: x, y: y, color: color)
+				x &+= fontWidth
+			}
+		}
+	}
+}

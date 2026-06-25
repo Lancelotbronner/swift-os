@@ -1,0 +1,63 @@
+import KernelKit
+import EmbeddedArch
+
+public struct RaspberryPi {
+	public init() {}
+
+	public func main() -> Never {
+		zeroBSS()
+
+		#if RASPI
+			let _ = UARTConsole(uart: UART0())
+		#else
+			// let console = OtherConsole()
+			fatalError("not implemented")
+		#endif
+
+		#if arch(arm64)
+			register_vector_table()
+		#endif
+
+		// Initialise the GIC-400 interrupt controller before enabling
+		// any device interrupts.
+		initGIC()
+		// Enable the UART0 SPI in the GIC Distributor so receive
+		// interrupts can reach the CPU.
+		gicEnableIRQ(gicUART0SPI)
+
+		print("Hello Swift!")
+
+		let memoryManager = MemoryManager()
+		print("RAM:", terminator: " ")
+		print(memoryManager.total / 1024 / 1024, terminator: " ")
+		print("MiB")
+
+		#if RASPI
+			let fb = RPiFramebuffer<UInt32>(width: 1920, height: 1080, pixelOrder: .rgb)
+		#else
+			// let fb = OtherFramebuffer()
+			fatalError("not implemented")
+		#endif
+		var g = Graphics(target: fb)
+		g.fillRect(x0: 0, y0: 0, x1: 100, y1: 100, color: 0xffffff)
+		g.drawString("Hello Swift!", x: 0, y: 100, color: 0xffffff)
+
+		#if arch(arm64)
+			// For debugging
+			brk0()
+
+		let el = get_el().EL
+			let elLabel: StaticString = "Exception Level:"
+			print(elLabel, terminator: " ")
+			print(el)
+			#if RASPI
+				g.drawString(elLabel, x: 0, y: 108, color: 0xffffff)
+				for i in 0..<Int(el) {
+					g.drawString("I", x: (elLabel.utf8CodeUnitCount + i) * 8, y: 108, color: 0xffffff)
+				}
+			#endif
+		#endif
+
+		repeat { halt() } while true
+	}
+}

@@ -1,5 +1,8 @@
 #ifdef __aarch64__
+<<<<<<<< Updated upstream:Sources/Boot/aarch64/boot.S
 
+========
+>>>>>>>> Stashed changes:Sources/CoreKernel/aarch64/boot.S
 .section ".text.boot"
 
 .global _start
@@ -69,5 +72,4 @@ jump_to_main:
     bl Kernel_main
     // for failsafe, halt this core too
     b hang
-
 #endif

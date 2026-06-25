@@ -1,0 +1,24 @@
+{
+  "originHash" : "ceded04c527f324d62e13f35f9b2a679a461785bcb1a82db8fbc974bfb1e1f10",
+  "pins" : [
+    {
+      "identity" : "swift-embedded-arch",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Lancelotbronner/swift-embedded-arch.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "39830090ab151ea844c7f32a75a64ffb08a1d15d"
+      }
+    },
+    {
+      "identity" : "swift-embedded-graphics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Lancelotbronner/swift-embedded-graphics.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e0aabc27bde96bc0c88b3b253a750f735f4ba1a5"
+      }
+    }
+  ],
+  "version" : 3
+}
