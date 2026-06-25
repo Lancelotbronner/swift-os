@@ -46,6 +46,7 @@ let package = Package(
 			name: "KernelKit",
 			dependencies: [
 				.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
+				.product(name: "EmbeddedGraphics", package: "swift-embedded-graphics"),
 				"CoreKernel",
 			],
 			swiftSettings: swiftSettings,

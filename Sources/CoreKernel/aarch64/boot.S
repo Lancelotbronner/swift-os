@@ -1,8 +1,4 @@
 #ifdef __aarch64__
-<<<<<<<< Updated upstream:Sources/Boot/aarch64/boot.S
-
-========
->>>>>>>> Stashed changes:Sources/CoreKernel/aarch64/boot.S
 .section ".text.boot"
 
 .global _start
