@@ -3,15 +3,9 @@ public import EmbeddedArch
 
 @c(_start) @section(".text.boot")
 func _start() {
-	//FIXME: the processor traps on the prologue
-	/*
-	 stp    fp, lr, [sp, #-0x10]!
-	 mov    fp, sp
-	 */
-
 	let reg = get_mpidr_el1()
 	// read cpu id, stop slave cores
-	if reg.Aff0 & 0x3 == 0 {
+	if reg.Aff0 == 0 {
 		primary()
 	}
 	hang()
@@ -73,7 +67,14 @@ private func primary() {
 
 @c
 private func jump_to_main() {
+	//FIXME: the processor traps on the prologue
+	// That's because it uses @c, I can't not use @c because I need it to be an address
+	/*
+	 stp    fp, lr, [sp, #-0x10]!
+	 mov    fp, sp
+	 */
+
 	set_sp(ImageLayout.topOfStack)
-	RaspberryPi().main()
+	RaspberryPi.main()
 	hang()
 }
