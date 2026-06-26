@@ -109,7 +109,7 @@ public func main() {
 	print("RAM:", terminator: " ")
 	print(memoryManager.total / 1024 / 1024, terminator: " ")
 	print("MiB")
-
+	
 	let fb = RPiFramebuffer<UInt32>(width: 1920, height: 1080, pixelOrder: .rgb)
 	var g = Graphics(target: fb)
 	g.fillRect(x0: 0, y0: 0, x1: 100, y1: 100, color: 0xffffff)

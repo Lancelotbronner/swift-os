@@ -31,35 +31,35 @@ private let gicdTYPER = unsafe VolatileMappedRegister<UInt32>(
 @inline(__always)
 private func gicdISENABLER(_ n: Int) -> VolatileMappedRegister<UInt32> {
 	unsafe VolatileMappedRegister<UInt32>(
-    	unsafeBitPattern: gicdBase + 0x100 + UInt(n) * 4)
+		unsafeBitPattern: gicdBase + 0x100 + UInt(n) * 4)
 }
 
 /// GICD_ICENABLERn – Interrupt Clear-Enable Registers
 @inline(__always)
 private func gicdICENABLER(_ n: Int) -> VolatileMappedRegister<UInt32> {
 	unsafe VolatileMappedRegister<UInt32>(
-    	unsafeBitPattern: gicdBase + 0x180 + UInt(n) * 4)
+		unsafeBitPattern: gicdBase + 0x180 + UInt(n) * 4)
 }
 
 /// GICD_IPRIORITYRn – Interrupt Priority Registers (8 bits per interrupt)
 @inline(__always)
 private func gicdIPRIORITYR(_ n: Int) -> VolatileMappedRegister<UInt32> {
 	unsafe VolatileMappedRegister<UInt32>(
-    	unsafeBitPattern: gicdBase + 0x400 + UInt(n) * 4)
+		unsafeBitPattern: gicdBase + 0x400 + UInt(n) * 4)
 }
 
 /// GICD_ITARGETSRn – Interrupt Processor Targets Registers (8 bits per interrupt)
 @inline(__always)
 private func gicdITARGETSR(_ n: Int) -> VolatileMappedRegister<UInt32> {
 	unsafe VolatileMappedRegister<UInt32>(
-    	unsafeBitPattern: gicdBase + 0x800 + UInt(n) * 4)
+		unsafeBitPattern: gicdBase + 0x800 + UInt(n) * 4)
 }
 
 /// GICD_ICFGRn – Interrupt Configuration Registers (2 bits per interrupt)
 @inline(__always)
 private func gicdICFGR(_ n: Int) -> VolatileMappedRegister<UInt32> {
 	unsafe VolatileMappedRegister<UInt32>(
-    	unsafeBitPattern: gicdBase + 0xC00 + UInt(n) * 4)
+		unsafeBitPattern: gicdBase + 0xC00 + UInt(n) * 4)
 }
 
 // MARK: GICC Registers
@@ -112,25 +112,25 @@ internal func initGIC() {
 
 	// Disable all SPI interrupts
 	for i in 1..<numIRQWords {
-    	gicdICENABLER(i).store(0xFFFF_FFFF)
+		gicdICENABLER(i).store(0xFFFF_FFFF)
 	}
 
 	// Set all SPI interrupt priorities to 0xA0 (non-secure default, below 0xFF mask)
 	// Priority registers are byte-addressable, packed 4 per word
 	let numPrioWords = numIRQWords * 8  // 32 IRQs per word, 4 IRQs per priority word
 	for i in 8..<numPrioWords {  // start at word 8 (skip SGI/PPI range)
-    	gicdIPRIORITYR(i).store(0xA0A0_A0A0)
+		gicdIPRIORITYR(i).store(0xA0A0_A0A0)
 	}
 
 	// Route all SPI interrupts to CPU0 (target mask = 0x01)
 	let numTargetWords = numIRQWords * 8
 	for i in 8..<numTargetWords {
-    	gicdITARGETSR(i).store(0x0101_0101)
+		gicdITARGETSR(i).store(0x0101_0101)
 	}
 
 	// Configure all SPIs as level-sensitive (ICFGR bit[2n+1] = 0)
 	for i in 2..<(numIRQWords * 2) {
-    	gicdICFGR(i).store(0)
+		gicdICFGR(i).store(0)
 	}
 
 	// Enable distributor

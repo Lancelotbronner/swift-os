@@ -19,25 +19,25 @@ struct Mbox: ~Copyable {
 
 	@_transparent
 	private mutating func volatilePointer(at i: Int) -> VolatileMappedRegister<UInt32> {
-    	unsafe .init(unsafeBitPattern: withUnsafePointer(to: &self.storage[i], UInt.init(bitPattern:)))
+		unsafe .init(unsafeBitPattern: withUnsafePointer(to: &self.storage[i], UInt.init(bitPattern:)))
 	}
 
 	subscript(_ i: Int) -> UInt32 {
 		@_transparent
-    	mutating get { self.volatilePointer(at: i).load() }
+		mutating get { self.volatilePointer(at: i).load() }
 		@_transparent
-    	set { self.volatilePointer(at: i).store(newValue) }
+		set { self.volatilePointer(at: i).store(newValue) }
 	}
 
 	mutating func call(ch: MboxChannel) -> Bool {
-    	let addr = UInt32(withUnsafePointer(to: &self.storage, UInt.init(bitPattern:)))
-    	let r = addr & ~0xF | UInt32(ch.rawValue & 0xF)
-    	while transmitMboxFull() {}
-    	mboxWrite.store(r)
-    	repeat {
-	    	while receiveMboxEmpty() {}
-    	} while mboxRead.load() != r
-    	return unsafe mbox[1] == mboxResponse
+		let addr = UInt32(withUnsafePointer(to: &self.storage, UInt.init(bitPattern:)))
+		let r = addr & ~0xF | UInt32(ch.rawValue & 0xF)
+		while transmitMboxFull() {}
+		mboxWrite.store(r)
+		repeat {
+			while receiveMboxEmpty() {}
+		} while mboxRead.load() != r
+		return unsafe mbox[1] == mboxResponse
 	}
 }
 
