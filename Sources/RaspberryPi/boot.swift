@@ -3,14 +3,20 @@ public import EmbeddedArch
 
 @c(_start) @section(".text.boot")
 func _start() {
+	//FIXME: the processor traps on the prologue
+	/*
+	 stp    fp, lr, [sp, #-0x10]!
+	 mov    fp, sp
+	 */
+
 	let reg = get_mpidr_el1()
 	// read cpu id, stop slave cores
 	if reg.Aff0 & 0x3 > 0 {
 		hang()
 	}
 
-	let el = get_el()
-	switch el.EL {
+	let elr = get_CurrentEL()
+	switch elr.el {
 	case 2:
 		var hcr = HCR()
 		hcr.rw = true
@@ -63,7 +69,7 @@ func _start() {
 
 @c
 private func jump_to_main() {
-	set_sp(ImageLayout.stackStart)
+	set_sp(ImageLayout.topOfStack)
 	RaspberryPi().main()
 	hang()
 }
