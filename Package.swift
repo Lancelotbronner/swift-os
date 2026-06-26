@@ -27,17 +27,21 @@ let cSettings: [CSetting] = [
 
 let package = Package(
 	name: "swift_os",
+	platforms: [
+		.macOS(.v14),
+	],
 	products: [
 		.executable(name: "Kernel", targets: ["Kernel"]),
 		.library(name: "KernelKit", targets: ["KernelKit"]),
 	],
 	traits: [
-		.default(enabledTraits: ["RASPI4"]),
+		.default(enabledTraits: ["VIRT"]),
 		.trait(name: "RASPI4", enabledTraits: ["RASPI"]),
 		.trait(name: "RASPI3", enabledTraits: ["RASPI"]),
 		.trait(name: "RASPI2", enabledTraits: ["RASPI"]),
 		.trait(name: "RASPI1", enabledTraits: ["RASPI"]),
 		.trait(name: "RASPI"),
+		.trait(name: "VIRT"),
 	],
 	dependencies: [
 		.package(url: "https://github.com/Lancelotbronner/swift-embedded-arch.git", branch: "main"),
@@ -58,6 +62,7 @@ let package = Package(
 		.executableTarget(name: "Kernel", dependencies: [
 			.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
 			.target(name: "RaspberryPi", condition: .when(traits: ["RASPI"])),
+			.target(name: "RaspberryPi", condition: .when(traits: ["VIRT"])),
 		]),
 		// Platforms
 		.target(
@@ -65,6 +70,13 @@ let package = Package(
 			dependencies: [
 				.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
 				"KernelKit"
+			],
+			swiftSettings: swiftSettings,
+		),
+		.executableTarget(
+			name: "Virt",
+			dependencies: [
+				.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
 			],
 			swiftSettings: swiftSettings,
 		),
