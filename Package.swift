@@ -8,8 +8,12 @@ let swiftSettings: [SwiftSetting] = [
 	.enableExperimentalFeature("Lifetimes"),
 	.enableExperimentalFeature("SafeInteropWrappers"),
 	.enableExperimentalFeature("Volatile"),
+	.enableUpcomingFeature("ExistentialAny"),
+	.enableUpcomingFeature("ImmutableWeakCaptures"),
 	.enableUpcomingFeature("InternalImportsByDefault"),
+	.enableUpcomingFeature("InferIsolatedConformances"),
 	.enableUpcomingFeature("MemberImportVisibility"),
+	.enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 	.strictMemorySafety(),
 	.treatAllWarnings(as: .error),
 ]

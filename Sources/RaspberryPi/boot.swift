@@ -33,6 +33,9 @@ private func primary() {
 		// set return level to EL1
 		set_spsr_el2(spsr)
 
+		// disable SIMD/FP traps
+		set_cptr_el2(CPTR_EL2())
+
 		set_elr_el2(jump_to_main)
 		isb_eret()
 	case 3:
@@ -65,6 +68,7 @@ private func primary() {
 	}
 }
 
+/*
 @c
 private func jump_to_main() {
 	//FIXME: the processor traps on the prologue
@@ -75,6 +79,7 @@ private func jump_to_main() {
 	 */
 
 	set_sp(ImageLayout.topOfStack)
-	RaspberryPi.main()
+	RaspberryPi().main()
 	hang()
 }
+*/
