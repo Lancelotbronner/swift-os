@@ -11,10 +11,14 @@ func _start() {
 
 	let reg = get_mpidr_el1()
 	// read cpu id, stop slave cores
-	if reg.Aff0 & 0x3 > 0 {
-		hang()
+	if reg.Aff0 & 0x3 == 0 {
+		primary()
 	}
+	hang()
+}
 
+@_transparent
+private func primary() {
 	let elr = get_CurrentEL()
 	switch elr.el {
 	case 2:
@@ -36,7 +40,7 @@ func _start() {
 		set_spsr_el2(spsr)
 
 		set_elr_el2(jump_to_main)
-		eret()
+		isb_eret()
 	case 3:
 		var hcr = HCR()
 		hcr.rw = true
@@ -58,12 +62,12 @@ func _start() {
 		spsr.i = true
 		spsr.f = true
 		// set return level to EL1
-		set_spsr_el2(spsr)
+		set_spsr_el3(spsr)
 
 		set_elr_el3(jump_to_main)
-		eret()
+		isb_eret()
 	default:
-		hang()
+		break
 	}
 }
 
