@@ -26,11 +26,12 @@
 		"path": "/usr/bin/env",
 		"extraCLIOptions": [
 			"qemu-system-aarch64",
+			"-S", "-s",
 			"-machine", "raspi4b",
 			"-serial", "stdio",
 			"-device", "usb-mouse",
 			"-device", "usb-kbd",
-			"-kernel"
+			"-kernel",
 		]
 	}
 }
