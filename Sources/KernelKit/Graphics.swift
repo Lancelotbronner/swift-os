@@ -2,7 +2,7 @@
 public struct Graphics<Target: RenderTarget & ~Copyable>: ~Copyable {
 	public var target: Target
 
-	@inline(always)
+	@_transparent
 	public init(target: consuming Target) {
 		self.target = target
 	}

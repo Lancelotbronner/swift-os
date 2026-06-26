@@ -4,7 +4,7 @@ import EmbeddedArch
 public struct RaspberryPi {
 	public init() {}
 
-	public func main() -> Never {
+	public func main() {
 		zeroBSS()
 
 		#if RASPI

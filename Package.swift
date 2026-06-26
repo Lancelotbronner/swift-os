@@ -52,12 +52,16 @@ let package = Package(
 			swiftSettings: swiftSettings,
 		),
 		.executableTarget(name: "Kernel", dependencies: [
+			.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
 			.target(name: "RaspberryPi", condition: .when(traits: ["RASPI"])),
 		]),
 		// Platforms
 		.target(
 			name: "RaspberryPi",
-			dependencies: ["KernelKit"],
+			dependencies: [
+				.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
+				"KernelKit"
+			],
 			swiftSettings: swiftSettings,
 		),
 		// Userland

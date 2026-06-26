@@ -12,9 +12,8 @@ public protocol Framebuffer: ~Copyable, ~Escapable, RenderTarget {
 
 public extension Framebuffer where Self: ~Copyable {
 	@unsafe
-	@inline(always)
-	@export(implementation)
 	subscript(uncheckedX x: Int, y y: Int) -> Depth {
+		@_transparent
 		get {
 			let x = UInt(x)
 			let y = UInt(y)
@@ -22,6 +21,7 @@ public extension Framebuffer where Self: ~Copyable {
 			let stride = UInt(MemoryLayout<Depth>.stride)
 			return unsafe Depth.volatileLoad(from: self.baseAddress &+ (y &* width &+ x) &* stride)
 		}
+		@_transparent
 		set(color) {
 			let x = UInt(x)
 			let y = UInt(y)
