@@ -27,10 +27,9 @@
 		"extraCLIOptions": [
 			"qemu-system-aarch64",
 			"-s",
-			"-machine", "raspi4b",
-			"-serial", "stdio",
-			"-device", "usb-mouse",
-			"-device", "usb-kbd",
+			"-machine", "virt",
+			"-cpu", "cortex-a57",
+			"-nographic",
 			"-kernel",
 		]
 	}

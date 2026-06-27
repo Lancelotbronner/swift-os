@@ -77,6 +77,7 @@ let package = Package(
 			name: "Virt",
 			dependencies: [
 				.product(name: "EmbeddedArch", package: "swift-embedded-arch"),
+				"CoreKernel",
 			],
 			swiftSettings: swiftSettings,
 		),
